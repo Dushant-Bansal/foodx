@@ -67,8 +67,8 @@ exports.login = async (value) => {
         id: user._id,
         userId: user?.email,
         phone: user?.phone,
+        email: user?.email,
         name: user?.name,
-        phone: user?.phone
     }
 
     // can be add password later
@@ -80,6 +80,9 @@ exports.login = async (value) => {
         userId: user._id,
         token: refreshToken
     }
+    let tokenData
+    tokenData = await dal.findOne(refreshTokenModel, { userId: user._id })
+    if (tokenData) return { userData, token: null, message: "USER ALREADY LOGIN" }
     await dal.create(refreshTokenModel, refreshBody)
 
     return {
@@ -87,8 +90,6 @@ exports.login = async (value) => {
         token: token,
         refreshToken: refreshToken
     }
-
-
 }
 
 exports.logout = async (filter) => {

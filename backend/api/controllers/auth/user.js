@@ -26,7 +26,7 @@ exports.login = async (req, res, next) => {
 
         const { userData, token, refreshToken, message } = await service.login(value);
 
-        if (message) return responseHandler(null, res, message, 400);
+        if (message) return responseHandler(userData || null, res, message, 400);
 
         if (!userData) return responseHandler(null, res, 'No user', 400);
 

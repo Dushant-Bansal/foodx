@@ -16,7 +16,6 @@ exports.verifyRefreshToken = async (req, res, next) => {
             headerToken = headerToken.substr(7);
         }
 
-        console.log("headerToken is ", typeof(headerToken));
         const token = await refreshTokenService.getToken({ token: headerToken });
 
         if (!token) {

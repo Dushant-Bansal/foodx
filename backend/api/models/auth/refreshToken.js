@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 Schema = mongoose.Schema;
-const { roles } = require('../../constant/roles');
 
 
 const refreshTokenSchema = Schema({
