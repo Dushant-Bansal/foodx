@@ -1,7 +1,6 @@
 const model = require("../../models/auth/refreshToken");
 const dal = require("../../dal/dal");
 const jwt = require("jsonwebtoken");
-const { ObjectId } = require("mongodb")
 require("config");
 
 exports.getToken = async (filter, projection = {}) => await dal.findOne(model, filter, projection);
