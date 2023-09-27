@@ -60,13 +60,13 @@ exports.getList = async (req, res, next) => {
 
         const queries = search(filter, pagination);
 
-        let response = await service.aggregate(queries);
+        let response = await service.search(queries);
 
         responseHandler(response, res);
 
     } catch (error) {
         console.error("error is ", error);
-        next(err);
+        next(error);
     }
 }
 
@@ -77,12 +77,12 @@ exports.update = async (req, res, next) => {
         const value = req.value;
 
         const response = await service.update({ _id: id }, value)
-        
+
         responseHandler(response, res);
 
     } catch (error) {
         console.error("error is ", error);
-        next(err);
+        next(error);
     }
 }
 
@@ -99,7 +99,7 @@ exports.deleteOne = async (req, res, next) => {
 
     } catch (error) {
         console.error("error is ", error);
-        next(err);
+        next(error);
     }
 }
 exports.deleteOneHard = async (req, res, next) => {
@@ -115,6 +115,6 @@ exports.deleteOneHard = async (req, res, next) => {
 
     } catch (error) {
         console.error("error is ", error);
-        next(err);
+        next(error);
     }
 }
