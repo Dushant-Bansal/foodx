@@ -6,9 +6,12 @@ const userSchema = Schema({
         type: String,
         index: true
     },
-    userId: {
+    userName: {
         type: String,
         index: true
+    },
+    password: {
+        type: String
     },
     email: {
         type: String,
@@ -27,14 +30,14 @@ const userSchema = Schema({
     },
     notifyTime: {
         type: String,
-        default: "1 h"
+        default: "3 hrs"
     },
-    spaceIds: {
-        type: [
-            {
-                type: Schema.Types.ObjectId
-            }
-        ]
+    mode: {
+        type: String,
+        enum: ["phone", "email", "oAuth"]
+    },
+    oAuth: {
+        type: String
     }
 }, {
     timestamps: true
