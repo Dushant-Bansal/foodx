@@ -3,16 +3,18 @@ const Joi = require("joi");
 const addUser = Joi.object({
     phone: Joi.string().trim(),
     name: Joi.string().trim().required(),
-    userId: Joi.string().trim(),
+    userName: Joi.string().trim(),
     email: Joi.string().email().trim().required(),
     password: Joi.string().required()
 });
 
 const loginSchema = Joi.object({
-    userId: Joi.string().trim(),
+    userName: Joi.string().trim(),
+    name: Joi.string().trim(),
     email: Joi.string().email(),
     phone: Joi.string().trim(),
     password: Joi.string(),
+    oAuth: Joi.string(),
     mode: Joi.string().trim().valid("Oauth", "phone", "email")
 });
 
