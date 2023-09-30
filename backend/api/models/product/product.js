@@ -33,7 +33,7 @@ const productSchema = Schema({
         default: "active",
         index: true
     },
-    status: {
+    mode: {
         type: String,
         enum: ["scanner", "manual"],
         default: "manual",
