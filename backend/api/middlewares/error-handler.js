@@ -37,7 +37,7 @@ const useErrorHandler = (err, req, res, next) => {
       message: err.message.code == 11000 ? `${Object.keys(err.message.keyValue)} : Value already exists` : err.message,
     });
   }
-  console.log("code here",err.code);
+  console.log("code here",err);
   // console.log("code here", JSON.stringify(req));
 
   if(err.writeErrors) {

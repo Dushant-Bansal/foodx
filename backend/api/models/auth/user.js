@@ -34,7 +34,7 @@ const userSchema = Schema({
     },
     mode: {
         type: String,
-        enum: ["phone", "email", "oAuth"]
+        enum: ["phone", "email", "Oauth"]
     },
     oAuth: {
         type: String

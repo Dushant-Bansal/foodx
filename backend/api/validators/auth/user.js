@@ -4,7 +4,7 @@ const addUser = Joi.object({
     phone: Joi.string().trim(),
     name: Joi.string().trim().required(),
     userName: Joi.string().trim(),
-    email: Joi.string().email().trim().required(),
+    email: Joi.string().email().trim(),
     password: Joi.string().required()
 });
 

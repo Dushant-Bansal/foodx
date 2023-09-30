@@ -1,19 +1,19 @@
 const service = require('../../service/auth/user');
-const { responseHandler, clientHandler, errorHandler } = require("../../middlewares/response-handler");
+const { responseHandler, clientHandler } = require("../../middlewares/response-handler");
 
 exports.onBoarding = async (req, res, next) => {
     try {
         const value = req.value;
-        const { userData, token, message } = await service.addUser(value);
+        const { userData, token, refreshToken, message } = await service.addUser(value);
         if (message) return clientHandler(null, res, message, 400);
         if (!userData) return clientHandler(null, res, 'No user', 400);
         const data = {
             data: userData,
-            Authorization: token
+            accessToken: token,
+            refreshToken: refreshToken
         };
         responseHandler(data, res);
     } catch (err) {
-        errorHandler(500, res, "INTERNAL SERVER ERROR")
         console.error(err);
         next(err);
     }
@@ -40,7 +40,6 @@ exports.login = async (req, res, next) => {
 
         responseHandler(data, res);
     } catch (err) {
-        errorHandler(500, res, "INTERNAL SERVER ERROR")
         console.error(err);
         next(err);
     }
@@ -52,7 +51,6 @@ exports.logout = async (req, res, next) => {
         const data = await service.logout(filter)
         responseHandler(data.message, res, data.message, data.status)
     } catch (error) {
-        errorHandler(500, res, "INTERNAL SERVER ERROR")
         console.error(err);
         next(err);
     }
