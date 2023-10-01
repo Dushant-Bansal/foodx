@@ -1,15 +1,15 @@
 const Joi = require("joi");
 
 const createProduct = Joi.object({
-    name: Joi.string().trim(),
-    description: Joi.string().trim(),
+    name: Joi.string().trim().required(),
+    description: Joi.string().trim().required(),
     status: Joi.string().valid("active", "expired"),
-    image: Joi.string().trim(),
+    image: Joi.string().trim().required(),
     mfgDate: Joi.string().trim(),
     expDate: Joi.string().trim(),
     stock: Joi.number().default(1),
     price: Joi.number(),
-    mode: Joi.string().valid("scanner", "manual"),
+    mode: Joi.string().valid("scanner", "manual").required(),
     barcode: Joi.string().trim()
 });
 const updateProduct = Joi.object({

@@ -16,7 +16,7 @@ exports.search = (filter, pagination) => {
                     from: "spaceusers",
                     localField: "_id",
                     foreignField: "spaceId",
-                    as: "spaceId",
+                    as: "spaceUsers",
                     pipeline: [
                         {
                             $match: {

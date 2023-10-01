@@ -11,22 +11,9 @@ exports.create = async (req, res, next) => {
         const userId = req.user.id;
         value.userId = userId;
 
-        let response, data, body;
+        let response
 
-        if (value.mode === "scanner") {
-            data = await API_CALL(value.barcode)
-            body = {
-                name: data?.data?.products[0]?.title,
-                description: data?.data?.products[0]?.description,
-                image: data?.data?.products[0]?.image,
-                userId: userId,
-                barcode: value.barcode,
-                mode: value.mode,
-            }
-            response = await service.create(body)
-        } else if (value.mode === "manual") {
-            response = await service.create(value)
-        }
+        response = await service.create(value)
 
         responseHandler(response, res);
 
@@ -43,7 +30,7 @@ exports.getList = async (req, res, next) => {
 
         let filter = { active: true, userId: new mongoose.Types.ObjectId(userId) };
         // handling pagination ...
-        const pagination = { skip: 0, limit: 10 };
+        const pagination = { skip: 0, limit: 100 };
         if (queryFilter.pageNo && queryFilter.pageSize) {
             pagination.skip = parseInt((queryFilter.pageNo - 1) * queryFilter.pageSize);
             pagination.limit = parseInt(queryFilter.pageSize);
@@ -51,6 +38,10 @@ exports.getList = async (req, res, next) => {
 
         if (queryFilter.isShop) {
             filter["isShop"] = queryFilter.isShop === "true" ? true : false
+        }
+
+        if (queryFilter.isSpace) {
+            filter["isSpace"] = queryFilter.isSpace === "true" ? true : false
         }
 
         if (queryFilter.status) {
@@ -65,6 +56,9 @@ exports.getList = async (req, res, next) => {
             filter["_id"] = { $in: queryFilter.id.split(',').map(el => new mongoose.Types.ObjectId(el)) }
         };
 
+        if (queryFilter.spaceId) {
+            filter["spaceId"] = { $in: queryFilter.spaceId.split(',').map(el => new mongoose.Types.ObjectId(el)) }
+        };
         const queries = search(filter, pagination);
 
         let response = await service.search(queries);

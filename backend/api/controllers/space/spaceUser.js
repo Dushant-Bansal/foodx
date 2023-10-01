@@ -1,6 +1,6 @@
 const { responseHandler, clientHandler } = require("../../middlewares/response-handler");
-const service = require('../../service/space/space');
-const spaceUserService = require('../../service/space/spaceUsers');
+const spaceService = require('../../service/space/space');
+const service = require('../../service/space/spaceUsers');
 const { default: mongoose } = require("mongoose");
 const { search } = require("../../queries/space");
 
@@ -10,8 +10,7 @@ exports.create = async (req, res, next) => {
         value.userId = req.user.id;
         let response;
         response = await service.find({ userId: value.userId })
-        console.log("🚀 ~ file: spaces.js:13 ~ exports.create= ~ response:", response.length)
-        if (response.length >= 5) return clientHandler("Space unable to create, Max Limit reached to create your spaces !!", res);
+        if (response >= 5) return clientHandler("Space unable to create, Max Limit reached to create your spaces !!", res);
 
         response = await service.create(value)
 
