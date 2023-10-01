@@ -5,6 +5,11 @@ const bcrypt = require('bcryptjs');
 const { getAccessToken, getRefreshToken, generateUsername } = require('../../helpers/helper');
 require('dotenv').config();
 
+
+exports.findOne = async (filter) => {
+    return await dal.findOne(model, filter, {});
+};
+
 exports.addUser = async (value) => {
     let token;
     value.password = await bcrypt.hash(value.password, 10);

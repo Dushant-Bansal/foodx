@@ -7,11 +7,23 @@ const invitedUserSchema = Schema({
     },
     roles: {
         type: String,
-        enum: ["admin", "collaborator", "viewer"]
+        enum: ["collaborator", "viewer"]
+    },
+    spaceId: {
+        type: Schema.Types.ObjectId,
+        ref: "spaces"
+    },
+    addedBy: {
+        type: Schema.Types.ObjectId,
+        ref: "users"
+    },
+    status: {
+        type: String,
+        enum: ["pending", "joined", "rejected"]
     },
     active: {
         type: Boolean,
-        default: false
+        default: true
     },
 }, {
     timestamps: true

@@ -1,9 +1,11 @@
 const Joi = require("joi");
 
 const spaceUser = Joi.object({
-    userId: Joi.string().trim(),
     spaceId: Joi.string().trim().regex(/^[0-9a-fA-F]{24}$/, 'object Id').required(),
     roles: Joi.string().valid("admin", "collaborator", "viewer").default("viewer"),
+});
+const spaceUserUpdateSpace = Joi.object({
+    spaceId: Joi.string().trim().regex(/^[0-9a-fA-F]{24}$/, 'object Id').required(),
 });
 
 const defaults = {
@@ -16,6 +18,7 @@ const message = (error) => { return `${error.details.map(x => x.message).join(',
 
 module.exports = {
     spaceUser,
+    spaceUserUpdateSpace,
     defaults,
     message
 }
