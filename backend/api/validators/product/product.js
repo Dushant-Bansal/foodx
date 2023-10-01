@@ -3,7 +3,7 @@ const Joi = require("joi");
 const createProduct = Joi.object({
     name: Joi.string().trim(),
     description: Joi.string().trim(),
-    status: Joi.string().valid("active", "expired").default("active"),
+    status: Joi.string().valid("active", "expired"),
     image: Joi.string().trim(),
     mfgDate: Joi.string().trim(),
     expDate: Joi.string().trim(),
@@ -15,11 +15,12 @@ const createProduct = Joi.object({
 const updateProduct = Joi.object({
     name: Joi.string().trim(),
     description: Joi.string().trim(),
-    status: Joi.string().valid("active", "expired").default("active"),
+    status: Joi.string().valid("active", "expired"),
     mfgDate: Joi.string().trim(),
     expDate: Joi.string().trim(),
     stock: Joi.number().default(1),
     price: Joi.number(),
+    isShop: Joi.bool(),
 });
 
 const defaults = {

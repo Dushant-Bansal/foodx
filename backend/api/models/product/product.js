@@ -29,9 +29,14 @@ const productSchema = Schema({
     },
     status: {
         type: String,
+        default: function () {
+            return this.expDate > new Date() ? 'active' : 'expired';
+        },
+        get: function () {
+            return this.expDate > new Date() ? 'active' : 'expired';
+        },
         enum: ["active", "expired"],
-        default: "active",
-        index: true
+        index: true,
     },
     mode: {
         type: String,

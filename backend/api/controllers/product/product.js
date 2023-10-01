@@ -1,4 +1,4 @@
-const { responseHandler, errorHandler } = require("../../middlewares/response-handler");
+const { responseHandler, errorHandler, clientHandler } = require("../../middlewares/response-handler");
 const service = require('../../service/product/product');
 const { default: mongoose } = require("mongoose");
 const { API_CALL } = require("../../utils/apiCall");
@@ -22,8 +22,6 @@ exports.create = async (req, res, next) => {
                 userId: userId,
                 barcode: value.barcode,
                 mode: value.mode,
-                status: value.status,
-                stock: value.stock
             }
             response = await service.create(body)
         } else if (value.mode === "manual") {
@@ -41,14 +39,23 @@ exports.create = async (req, res, next) => {
 exports.getList = async (req, res, next) => {
     try {
         let queryFilter = req.query ? req.query : {};
+        const userId = req.user.id
 
-        let filter = { active: true };
+        let filter = { active: true, userId: new mongoose.Types.ObjectId(userId) };
         // handling pagination ...
         const pagination = { skip: 0, limit: 10 };
         if (queryFilter.pageNo && queryFilter.pageSize) {
             pagination.skip = parseInt((queryFilter.pageNo - 1) * queryFilter.pageSize);
             pagination.limit = parseInt(queryFilter.pageSize);
         };
+
+        if (queryFilter.isShop) {
+            filter["isShop"] = queryFilter.isShop === "true" ? true : false
+        }
+
+        if (queryFilter.status) {
+            filter["status"] = queryFilter.status
+        }
 
         if (queryFilter.name) {
             filter["name"] = { $regex: queryFilter.name, $options: "i" };

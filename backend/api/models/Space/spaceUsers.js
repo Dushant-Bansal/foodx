@@ -15,7 +15,8 @@ const spaceUserSchema = Schema({
         enum: ["admin", "collaborator", "viewer"]
     },
     isLeave: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     status: {
         type: String,
@@ -24,7 +25,7 @@ const spaceUserSchema = Schema({
     },
     active: {
         type: Boolean,
-        default: false
+        default: true
     },
 }, {
     timestamps: true
