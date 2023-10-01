@@ -103,8 +103,9 @@ exports.login = async (value) => {
     let tokenData
     tokenData = await dal.findOne(refreshTokenModel, { userId: user._id })
     if (tokenData && value.mode !== "Oauth") return { userData, token: null, message: "USER ALREADY LOGIN" }
-    if (tokenData && value.mode === "Oauth") await dal.findOneAndUpsert(refreshTokenModel, { userId: user._id }, refreshBody)
+    if (value.mode === "Oauth") await dal.findOneAndUpsert(refreshTokenModel, { userId: user._id }, refreshBody)
     if (!tokenData && value.mode !== "Oauth") await dal.create(refreshTokenModel, { userId: user._id }, refreshBody)
+
 
     return {
         userData,
