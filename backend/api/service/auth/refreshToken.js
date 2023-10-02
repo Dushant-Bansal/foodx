@@ -6,16 +6,18 @@ require("config");
 exports.getToken = async (filter, projection = {}) => await dal.findOne(model, filter, projection);
 
 let generateAccessToken = (body) => {
-    return jwt.sign(body, process.env.ACCESS_TOKEN_PRIVATE_KEY, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY_DAY})
+    return jwt.sign(body, process.env.ACCESS_TOKEN_PRIVATE_KEY, { expiresIn: process.env.ACCESS_TOKEN_EXPIRY_DAY })
 }
 
-exports.generateAccessToken = async (user) => {
+exports.generateAccessToken = async (data) => {
 
     const body = {
-        userId: user.userId,
-        roles: user.roles,
-        phone: user.phone,
-        email: user?.email
+        id: data.id,
+        userName: data?.userName || null,
+        name: data.nama,
+        email: data?.email || null,
+        phone: data?.phone || null,
+        active: data.active
     }
 
     const accessToken = generateAccessToken(body);

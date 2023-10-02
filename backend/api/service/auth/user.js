@@ -71,16 +71,9 @@ exports.login = async (value) => {
         // user = await dal.findOne(model, { email: value.email }, projections)
     } else if (value.mode === "email") {
         user = await dal.findOne(model, { email: value.email }, projections)
-        if (value.password) {
-            const result = await bcrypt.compare(value.password, user.password);
-            if (!result) return { userData: null, token: null, message: "Please double check the credentials" }
-        }
     } else if (value.mode === "phone") {
         user = await dal.findOne(model, { phone: value.phone }, projections)
-        if (value.password) {
-            const result = await bcrypt.compare(value.password, user.password);
-            if (!result) return { userData: null, token: null, message: "Please double check the credentials" }
-        }
+
     } else {
         return { userData: null, token: null, message: "Incorrect mode for login" }
     }
@@ -88,7 +81,10 @@ exports.login = async (value) => {
     if (!user) {
         return { userData: null, token: null }
     };
-
+    if (value.password) {
+        const result = await bcrypt.compare(value.password, user.password);
+        if (!result) return { userData: null, token: null, message: "Please double check the credentials" }
+    }
     const userData = {
         id: user._id,
         userName: user?.userName,
@@ -109,7 +105,7 @@ exports.login = async (value) => {
     tokenData = await dal.findOne(refreshTokenModel, { userId: user._id })
     if (tokenData && value.mode !== "Oauth") return { userData, token: null, message: "USER ALREADY LOGIN" }
     if (value.mode === "Oauth") await dal.findOneAndUpsert(refreshTokenModel, { userId: user._id }, refreshBody)
-    if (!tokenData && value.mode !== "Oauth") await dal.create(refreshTokenModel, { userId: user._id }, refreshBody)
+    if (!tokenData && value.mode !== "Oauth") await dal.create(refreshTokenModel, refreshBody)
 
 
     return {

@@ -27,8 +27,13 @@ exports.getList = async (req, res, next) => {
     try {
         let queryFilter = req.query ? req.query : {};
         const userId = req.user.id
+        let filter
+        if (queryFilter.isSpace === "true") {
+            filter = { active: true };
+        } else {
+            filter = { active: true, userId: new mongoose.Types.ObjectId(userId) };
+        }
 
-        let filter = { active: true, userId: new mongoose.Types.ObjectId(userId) };
         // handling pagination ...
         const pagination = { skip: 0, limit: 100 };
         if (queryFilter.pageNo && queryFilter.pageSize) {

@@ -13,8 +13,7 @@ exports.search = (filter, pagination) => {
 
             {
                 $sort: {
-                    createdAt: -1,
-                    updatedAt: -1,
+                    expDate: -1
                 },
             },
             {

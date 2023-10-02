@@ -17,17 +17,18 @@ exports.create = async (req, res, next) => {
         user = await userService.findOne({ _id: userId })
         if (!user) return clientHandler("Not in the Database", res)
 
+        response = await spaceService.findOne({ _id: value.spaceId })
+        if (!response) return clientHandler("Space not exist", res)
+
         data = await invitedUsersService.findOne({ by: user.email, spaceId: value.spaceId })
         if (!data) {
             data = await invitedUsersService.findOne({ by: user.phone, spaceId: value.spaceId })
             if (!data) return clientHandler("You'r not invited in this space", res)
         }
 
-        response = await spaceService.findOne({ _id: value.spaceId })
-        if (!response) return clientHandler("Space not exist", res)
-
+        if (data.roles !== value.roles) return clientHandler("Unauthorised role", res)
         response = await service.findOne({ userId: userId, spaceId: value.spaceId })
-        if (response) return clientHandler("You'r already here in this space !!", res)
+        if (response && data.status === "joined") return clientHandler("You'r already here in this space !!", res)
 
         const body = {
             spaceId: value.spaceId,
@@ -37,7 +38,7 @@ exports.create = async (req, res, next) => {
 
         response = await service.create(body)
         if (!response) return clientHandler("Not able to add in this space")
-        await invitedUsersService.update({ by: data.by, spaceId: value.spaceId }, { roles: "joined" })
+        await invitedUsersService.update({ by: data.by, spaceId: value.spaceId }, { status: "joined" })
 
         responseHandler(response, res)
 
@@ -77,6 +78,9 @@ exports.getList = async (req, res, next) => {
         if (queryFilter.spaceId) {
             filter["spaceId"] = { $in: queryFilter.spaceId.split(',').map(el => new mongoose.Types.ObjectId(el)) }
         };
+        if (queryFilter.userId) {
+            filter["userId"] = { $in: queryFilter.userId.split(',').map(el => new mongoose.Types.ObjectId(el)) }
+        };
 
         const queries = search(filter, pagination);
 
@@ -112,17 +116,17 @@ exports.updateSpace = async (req, res, next) => {
 
 exports.updateProduct = async (req, res, next) => {
     try {
-        const { id, productId } = req.params;
+        const { productId } = req.params;
 
         const value = req.value;
         let response;
 
-        response = await service.findOne({ _id: id })
-        if (response.roles === "viewer") return clientHandler("Not allowed to do changes", res)
+        response = await service.findOne({ userId: req.user.id })
+        if (response.roles === "viewer") return clientHandler("Viewers not allowed to do changes", res)
         response = await productService.findOne({ _id: productId, active: true })
         const body = {
             isSpace: !response.isSpace,
-            spaceId: response.isSpace ? value.spaceId : null
+            spaceId: !response.isSpace ? value.spaceId : null
         }
         response = await productService.update({ _id: productId, active: true }, body)
         responseHandler(response, res);
